@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - main   # Runs workflow when pushing to main branch
 
 jobs:
   deploy:
@@ -18,27 +18,18 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to EC2
+      - name: Copy files to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "
-            # Ensure app folder
-            mkdir -p ~/app &&
-            cd ~/app &&
-
-            # Copy latest files
-            rm -rf * &&
-            exit
-          "
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "mkdir -p ~/app"
           rsync -avz --exclude '.git*' ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:~/app/
 
-      - name: Install deps & Run App
+      - name: Install and Restart Node.js App
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "
             cd ~/app &&
             npm install &&
-            # Install pm2 if missing
-            if ! command -v pm2 >/dev/null 2>&1; then
-              npm install -g pm2
-            fi &&
-            pm2 describe app > /dev/null 2>&1 && pm2 restart app || pm2 start server.js --name app
+            # Kill any existing process on port 3000
+            fuser -k 3000/tcp || true &&
+            # Start app with nohup so it keeps running
+            nohup node server.js > app.log 2>&1 &
           "
