@@ -23,12 +23,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "mkdir -p ~/app"
           rsync -avz --exclude '.git*' ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:~/app/
 
-      - name: Restart Node.js App
+      - name: Install dependencies & Restart App
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "
             cd ~/app &&
-            npm install --production &&
-            pm2 restart app || pm2 start server.js --name app
+            npm install &&
+            pm2 describe app > /dev/null 2>&1 && pm2 restart app || pm2 start server.js --name app
           "
- 
- 
