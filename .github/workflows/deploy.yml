@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main   # Run workflow when code is pushed to main branch
+      - main
 
 jobs:
   deploy:
@@ -18,15 +18,27 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Copy files to EC2
+      - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "mkdir -p ~/app"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "
+            # Ensure app folder
+            mkdir -p ~/app &&
+            cd ~/app &&
+
+            # Copy latest files
+            rm -rf * &&
+            exit
+          "
           rsync -avz --exclude '.git*' ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }}:~/app/
 
-      - name: Install dependencies & Restart App
+      - name: Install deps & Run App
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.EC2_PUBLIC_IP }} "
             cd ~/app &&
             npm install &&
+            # Install pm2 if missing
+            if ! command -v pm2 >/dev/null 2>&1; then
+              npm install -g pm2
+            fi &&
             pm2 describe app > /dev/null 2>&1 && pm2 restart app || pm2 start server.js --name app
           "
