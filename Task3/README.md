@@ -2,7 +2,8 @@
 ## Project Screenshots
 
 ### Web Interface
-![App2 Web Interface](image-web.png)
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/228f8cf8-4070-427a-8344-9f670bf73503" />
+
 
 ### GitHub Actions Deployment
 ![GitHub Actions Deployment](image-gitdeploy.png)
