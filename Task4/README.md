@@ -40,10 +40,11 @@ Below are example screenshots placed in the `screenshots/` folder:
 
 - EC2 WEBPAGE
 - <img width="1272" height="600" alt="image" src="https://github.com/user-attachments/assets/4a5ebcab-130d-42bd-bcc5-8461c31921d8" />
--Files
-  main.tf – Terraform infra
-  inventory – Ansible host file
-  site.yml – Ansible playbook
-  index.html – Web content
-  README.md – Setup instructions
+## Files
+
+- `main.tf` – Terraform infra
+- `inventory` – Ansible host file
+- `site.yml` – Ansible playbook
+- `index.html` – Web content
+- `README.md` – Setup instructions
 
