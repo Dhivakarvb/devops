@@ -2,12 +2,8 @@
 ## Project Screenshots
 
 ### Web Interface
-![App2 Web Interface](image-web.png)
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/228f8cf8-4070-427a-8344-9f670bf73503" />
 
-### GitHub Actions Deployment
-![GitHub Actions Deployment](image-gitdeploy.png)
-
-This repository contains **App2**, a simple Node.js HTTP server demonstrating a CI/CD deployment to AWS EC2 using **PM2**. This is part of the `nodejs_proj` project.
 
 ---
 
