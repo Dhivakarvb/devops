@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xops-app
+  labels:
+    app: xops-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: xops-app
+  template:
+    metadata:
+      labels:
+        app: xops-app
+    spec:
+      containers:
+        - name: xops-app
+          image: docker.io/REPLACE_ME/xops-app:latest   # CI will replace this tag
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
