@@ -97,6 +97,7 @@ kind delete cluster --name xops-cluster
 
 Add screenshots of your running app and cluster here.
 
-![App Screenshot](image)
-![Cluster Info](image)
-![Pods List](image)
+<img width="1318" height="671" alt="image" src="https://github.com/user-attachments/assets/f5d6d666-4413-41ec-9925-10a065500067" />
+<img width="795" height="151" alt="image" src="https://github.com/user-attachments/assets/3e9d18e9-8d38-41e6-8691-02908c337621" />
+
+
