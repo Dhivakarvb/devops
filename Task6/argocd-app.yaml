@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Dhivakarvb/devops/Task6/infra-repo/k8s.git
+    repoURL: https://github.com/Dhivakarvb/devops.git
     targetRevision: main
-    path: k8s
+    path: Task6/infra-repo/k8s   # <-- corrected path
   destination:
     server: https://kubernetes.default.svc
     namespace: default
@@ -16,5 +16,4 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+ 
