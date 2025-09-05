@@ -15,19 +15,8 @@ spec:
         app: xops-app
     spec:
       containers:
-        - name: xops-app
-          image: docker.io/REPLACE_ME/xops-app:latest   # CI will replace this tag
-          ports:
-            - containerPort: 80
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 3
-            periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 10
-            periodSeconds: 10
+      - name: xops-app
+        image: dhivakar03/xops-app:latest
+        ports:
+        - containerPort: 80
+ 
