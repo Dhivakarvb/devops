@@ -1,94 +1,64 @@
-# 🚀 XOps Microchallenge #7 – Secrets Management with Kubernetes Secrets
+# Kubernetes Secrets — XOps Microchallenge #7
 
-📌 **Objective**  
-Learn how to securely manage sensitive data (like database credentials) in Kubernetes using **Secrets**. You will store fake DB credentials, inject them into pods, and verify access inside containers.
+## Included files
+- `secret-env-pod.yaml` — Pod that consumes secret as environment variables
+- `secret-vol-pod.yaml` — Pod that mounts secret as files (volume)
+- `README.md` — This file
 
 ---
 
-⚙️ **1. Prerequisites**  
-- Docker  
-- kind (Kubernetes-in-Docker)  
-- kubectl  
-- GitHub Account  
+# Environment Variables vs Mounted Files in Kubernetes Secrets
 
-Check installations:  
-```bash
-docker --version
-kind --version
-kubectl version --client
-🏗️ 2. Create a Kubernetes Secret
-Create a secret with fake DB credentials:
+**Environment Variables**
+- Best for small, simple values (like DB username or password).
+- Easy for applications to consume.
+- Risk: values can appear in logs, crash dumps, or debugging sessions.
+- Secret values are loaded when the pod starts — updating the Secret does **not** automatically update running pods (pod restart required for env var change).
 
-bash
-Copy code
-kubectl create secret generic db-credentials \
-  --from-literal=DB_USER=fakeuser \
-  --from-literal=DB_PASSWORD=fakepassword
-Verify:
+**Mounted Files**
+- Secrets are written as files inside the container (e.g., `/etc/secrets/DB_USER`).
+- Useful for certificates, keys, or larger configuration values.
+- Kubernetes can update the files automatically if the Secret changes (no pod restart needed in many cases).
+- Slightly more work for the app because it must read from files rather than env vars.
 
-bash
-Copy code
-kubectl get secrets
-kubectl describe secret db-credentials
-🌐 3. Inject Secret into Pods
+---
 
-a) As Environment Variables
-Define pod in secret-env-pod.yaml.
-Check values inside pod:
+## 🛠️ Step-by-Step Execution
 
-bash
-Copy code
-kubectl exec -it secret-env-pod -- printenv | grep DB_
-b) As Mounted Files (Optional)
-Define pod in secret-vol-pod.yaml.
-Check values inside pod:
+> The commands below include Windows PowerShell and Linux/WSL variants where applicable.
 
-bash
-Copy code
+### Prerequisites
+- Docker Desktop (recommended driver for Minikube)
+- Minikube installed and in PATH
+- kubectl installed and in PATH
+- PowerShell (Windows) or bash (Linux/WSL)
+
+---
+
+### Install Minikube (Windows example — add these content)
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe
+rename minikube-windows-amd64.exe minikube.exe
+move minikube.exe C:\Windows\System32
+
+### Start Minikube
+# Start with Docker driver (Windows: run from PowerShell if Docker Desktop present)
+minikube start --driver=docker
+kubectl get nodes
+
+### Create secret via PowerShell 
+kubectl create secret generic db-credentials --from-literal=username=myuser --from-literal=password=mypassword
+
+### Deploy Pod that uses Secret as Environment Variables
+kubectl apply -f secret-env-pod.yaml
+kubectl get pods
+
+### Deploy Pod that mounts the Secret as Files
+kubectl apply -f secret-vol-pod.yaml
+kubectl get pods
+
+### Verify the proces
 kubectl exec -it secret-vol-pod -- ls /etc/secrets
-kubectl exec -it secret-vol-pod -- cat /etc/secrets/DB_USER
-kubectl exec -it secret-vol-pod -- cat /etc/secrets/DB_PASSWORD
-🔍 4. Use Cases – Env Vars vs Mounted Files
+kubectl exec -it secret-vol-pod -- cat /etc/secrets/username
+kubectl exec -it secret-vol-pod -- cat /etc/secrets/password
 
-Environment Variables
-
-Simple to use for credentials like DB_USER, API keys
-
-Automatically available at runtime
-
-⚠️ Visible in kubectl describe pod → less secure
-
-Mounted Files
-
-Better for large/structured data (TLS certs, config files)
-
-Secrets can be updated without restarting pods
-
-More secure (not exposed in pod spec)
-
-Recommended for production
-
-🧹 5. Clean Up
-
-bash
-Copy code
-kubectl delete pod secret-env-pod
-kubectl delete pod secret-vol-pod
-kubectl delete secret db-credentials
-📂 Repo Structure
-
-bash
-Copy code
-/infra-repo
-└── k8s/
-    ├── k8s-secret.yaml          # Secret definition (optional if using kubectl create)
-    ├── secret-env-pod.yaml      # Pod using secrets as env vars
-    ├── secret-vol-pod.yaml      # Pod mounting secrets as volumes
-
----
-
-## 📸 Screenshots
-
-Below is a screenshot showing secret values accessed inside the pod:
-
-![Secrets in Pod](c:\Users\Dhivakar_V\OneDrive - Celcom Solutions Global Pvt Ltd\Pictures\Screenshots\Screenshot 2025-09-16 163650.png)
+### Screenshots
