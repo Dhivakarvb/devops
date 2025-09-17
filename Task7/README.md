@@ -91,4 +91,4 @@ Copy code
 
 Below is a screenshot showing secret values accessed inside the pod:
 
-![Secrets in Pod](c:\Users\Dhivakar_V\OneDrive - Celcom Solutions Global Pvt Ltd\Pictures\Screenshots\Screenshot 2025-09-16 163650.png)
+<img width="969" height="165" alt="Screenshot 2025-09-16 163650" src="https://github.com/user-attachments/assets/a2c1e488-8f60-48f3-b95d-f6f89995c3b8" />
