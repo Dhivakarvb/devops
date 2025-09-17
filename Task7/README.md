@@ -62,3 +62,9 @@ kubectl exec -it secret-vol-pod -- cat /etc/secrets/username
 kubectl exec -it secret-vol-pod -- cat /etc/secrets/password
 
 ### Screenshots
+Below is a screenshot showing secret values accessed inside the pod:
+<img width="969" height="165" alt="Screenshot 2025-09-16 163650" src="https://github.com/user-attachments/assets/6f5d865d-90e9-45c8-bf9d-f48cdd4bdc6d" />
+
+
+
+
