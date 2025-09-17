@@ -85,7 +85,7 @@ Copy code
     ├── secret-env-pod.yaml      # Pod using secrets as env vars
     ├── secret-vol-pod.yaml      # Pod mounting secrets as volumes
 
----
+```
 
 ## 📸 Screenshots
 
