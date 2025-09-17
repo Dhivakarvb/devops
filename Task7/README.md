@@ -91,4 +91,4 @@ Copy code
 
 Below is a screenshot showing secret values accessed inside the pod:
 
-![Secrets inside pod](https://github.com/user-attachments/assets/869ba0a2-6959-4501-9cb2-731034f86535)
+
