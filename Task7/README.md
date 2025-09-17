@@ -1,71 +1,94 @@
-# ⚡ XOps Microchallenge #7 – Secrets Management with Kubernetes Secrets ⚡
+# 🚀 XOps Microchallenge #7 – Secrets Management with Kubernetes Secrets
 
-## 🎯 Objective
-
-Securely store and inject fake database credentials (`DB_USER`, `DB_PASSWORD`) into a pod using Kubernetes Secrets, and verify they are accessible inside the container.
+📌 **Objective**  
+Learn how to securely manage sensitive data (like database credentials) in Kubernetes using **Secrets**. You will store fake DB credentials, inject them into pods, and verify access inside containers.
 
 ---
 
-## 🔧 Step-by-Step Challenge
+⚙️ **1. Prerequisites**  
+- Docker  
+- kind (Kubernetes-in-Docker)  
+- kubectl  
+- GitHub Account  
 
-### 1. Create a Kubernetes Secret
+Check installations:  
+```bash
+docker --version
+kind --version
+kubectl version --client
+🏗️ 2. Create a Kubernetes Secret
+Create a secret with fake DB credentials:
 
-- Store a fake DB username and password in a Kubernetes Secret named `db-credentials`.
-- Verify the secret is created successfully.
-
-Example:
-```sh
+bash
+Copy code
 kubectl create secret generic db-credentials \
   --from-literal=DB_USER=fakeuser \
-  --from-literal=DB_PASSWORD=fakepass
-kubectl get secret db-credentials
-```
+  --from-literal=DB_PASSWORD=fakepassword
+Verify:
 
----
+bash
+Copy code
+kubectl get secrets
+kubectl describe secret db-credentials
+🌐 3. Inject Secret into Pods
 
-### 2. Inject Secret as Environment Variables
+a) As Environment Variables
+Define pod in secret-env-pod.yaml.
+Check values inside pod:
 
-- Create a pod (e.g., NGINX or your web app) that loads the `DB_USER` and `DB_PASSWORD` values from the Secret as environment variables.
-- Use `kubectl exec` to confirm the pod has the secret values available.
+bash
+Copy code
+kubectl exec -it secret-env-pod -- printenv | grep DB_
+b) As Mounted Files (Optional)
+Define pod in secret-vol-pod.yaml.
+Check values inside pod:
 
----
+bash
+Copy code
+kubectl exec -it secret-vol-pod -- ls /etc/secrets
+kubectl exec -it secret-vol-pod -- cat /etc/secrets/DB_USER
+kubectl exec -it secret-vol-pod -- cat /etc/secrets/DB_PASSWORD
+🔍 4. Use Cases – Env Vars vs Mounted Files
 
-### 3. Inject Secret as Mounted Files (Optional)
+Environment Variables
 
-- Create another pod that mounts the secret into `/etc/secrets`.
-- Verify you can read the secret values from files inside the pod.
+Simple to use for credentials like DB_USER, API keys
 
----
+Automatically available at runtime
 
-### 4. Document Use Cases
+⚠️ Visible in kubectl describe pod → less secure
 
-#### Environment Variables vs Mounted Files
+Mounted Files
 
-- **Environment Variables:**  
-  Use when your app natively reads secrets from environment variables. Simple for most 12-factor apps.
-- **Mounted Files:**  
-  Use when your app expects secrets as files, or when you want to rotate secrets without restarting pods (Kubernetes updates mounted secrets automatically).
+Better for large/structured data (TLS certs, config files)
 
----
+Secrets can be updated without restarting pods
 
-## 📂 Expected Repo Structure
+More secure (not exposed in pod spec)
 
-```
+Recommended for production
+
+🧹 5. Clean Up
+
+bash
+Copy code
+kubectl delete pod secret-env-pod
+kubectl delete pod secret-vol-pod
+kubectl delete secret db-credentials
+📂 Repo Structure
+
+bash
+Copy code
 /infra-repo
 └── k8s/
-    ├── k8s-secret.yaml           # (Optional: define Secret via YAML)
-    ├── secret-env-pod.yaml       # Pod using secrets as env vars
-    ├── secret-vol-pod.yaml       # Pod mounting secrets as volumes (optional)
-    └── README.md                 # Steps + screenshots
-```
+    ├── k8s-secret.yaml          # Secret definition (optional if using kubectl create)
+    ├── secret-env-pod.yaml      # Pod using secrets as env vars
+    ├── secret-vol-pod.yaml      # Pod mounting secrets as volumes
 
 ---
 
-## ✅ Submission Format
+## 📸 Screenshots
 
-- ✅ Link to your repo with YAML files
-- ✅ Screenshot of pod env showing secrets injected as env vars
-- ✅ Screenshot of pod showing secrets mounted as files (optional)
-- ✅ Short note explaining env vars vs mounted files
+Below is a screenshot showing secret values accessed inside the pod:
 
----
+![Secrets in Pod](c:\Users\Dhivakar_V\OneDrive - Celcom Solutions Global Pvt Ltd\Pictures\Screenshots\Screenshot 2025-09-16 163650.png)
