@@ -91,4 +91,6 @@ Copy code
 
 Below is a screenshot showing secret values accessed inside the pod:
 
+<img width="1362" height="684" alt="Screenshot 2025-09-05 170315" src="https://github.com/user-attachments/assets/2ec80741-f5c7-429b-818c-a941a5172b51" />
+
 
